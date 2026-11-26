@@ -15,7 +15,7 @@ export function CartView() {
       <div className="mt-8 rounded-brand border border-dashed border-border p-12 text-center">
         <p className="text-5xl">🛒</p>
         <p className="mt-3 font-semibold">Tu carrito está vacío</p>
-        <p className="mt-1 text-sm text-muted-foreground">Descubrí nuestros productos impresos en 3D.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Descubre nuestros productos impresos en 3D.</p>
         <Link href="/productos" className="btn-primary mt-6">Ver catálogo</Link>
       </div>
     );
@@ -34,6 +34,16 @@ export function CartView() {
                 <div>
                   <Link href={`/producto/${item.productSlug}`} className="font-semibold hover:text-primary">{item.name}</Link>
                   {item.variantName && <p className="text-sm text-muted-foreground">{item.variantName}</p>}
+                  {item.customizations?.map((c) => (
+                    <p key={c.label} className="text-xs text-muted-foreground">🎨 {c.label}: {c.value}</p>
+                  ))}
+                  {item.bundleItems && (
+                    <ul className="mt-1 text-xs text-muted-foreground">
+                      {item.bundleItems.map((b) => (
+                        <li key={b.name + b.details}>↳ {b.quantity} x {b.name}{b.details && ` (${b.details})`}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
                 <button
                   onClick={() => cart.remove(item.key)}

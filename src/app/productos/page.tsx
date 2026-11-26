@@ -12,7 +12,7 @@ export default async function ProductsPage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
 
   return (
-    <div className="container-page py-10">
+    <div className="container-page py-6 sm:py-10">
       <Suspense
         fallback={
           <>

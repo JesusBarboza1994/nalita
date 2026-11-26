@@ -2,7 +2,7 @@
 
 /* =========================================================================
    PALETA DE COLORES — nalita3d
-   Editá estas variables para cambiar los colores de toda la tienda.
+   Edita estas variables para cambiar los colores de toda la tienda.
    Cada variable queda disponible en Tailwind como utilidades:
    --color-primary  ->  bg-primary, text-primary, border-primary, etc.
    ========================================================================= */
@@ -15,6 +15,12 @@
   --secondary-foreground: #ffffff;
   --accent: #ffd166;             /* badges "Nuevo", detalles */
   --accent-foreground: #3b2a00;
+
+  /* Temporada destacada (ej. Navidad): chip del navbar y banner del home */
+  --highlight: #c0392b;
+  --highlight-hover: #a93226;
+  --highlight-foreground: #ffffff;
+  --highlight-secondary: #1e8449;
 
   /* Superficies */
   --background: #fffafc;
@@ -43,6 +49,10 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-hover: var(--highlight-hover);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-highlight-secondary: var(--highlight-secondary);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
@@ -68,6 +78,9 @@ body {
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
   }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary-hover;
   }
@@ -78,7 +91,14 @@ body {
     @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50 bg-whatsapp text-whatsapp-foreground hover:bg-whatsapp-hover;
   }
   .input {
-    @apply w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground;
+  }
+  /* Listas con scroll horizontal (categorías, filtros) sin barra visible */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
   .container-page {
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6;

@@ -17,10 +17,10 @@ export function Footer() {
         <div className="text-sm">
           <p className="font-semibold">Cómo comprar</p>
           <ol className="mt-2 list-decimal space-y-1 pl-4 text-muted-foreground">
-            <li>Elegí tus productos y variantes</li>
-            <li>Completá tus datos de entrega</li>
-            <li>Confirmá el pedido por WhatsApp</li>
-            <li>Pagás cuando lo recibís</li>
+            <li>Elige tus productos y variantes</li>
+            <li>Completa tus datos de entrega</li>
+            <li>Confirma el pedido por WhatsApp</li>
+            <li>Pagas cuando lo recibes</li>
           </ol>
         </div>
         <div className="text-sm">

@@ -55,7 +55,12 @@ function getSnapshot() {
 export const cart = {
   add(item: Omit<CartItem, "key" | "quantity">, quantity = 1) {
     load();
-    const key = `${item.productId}:${item.variantId}`;
+    // Packs con distinto contenido o colores distintos son ítems distintos del carrito
+    const contents = [
+      ...(item.bundleItems ?? []).map((b) => `${b.name}x${b.quantity}${b.details ? `(${b.details})` : ""}`),
+      ...(item.customizations ?? []).map((c) => `${c.label}=${c.value}`),
+    ].join(",");
+    const key = `${item.productId}:${item.variantId}${contents ? `:${contents}` : ""}`;
     const existing = items.find((i) => i.key === key);
     persist(
       existing

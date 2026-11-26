@@ -44,14 +44,14 @@ export function CatalogView({ products, categories }: { products: Product[]; cat
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold">{q ? `Resultados para “${q}”` : "Catálogo"}</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{q ? `Resultados para “${q}”` : "Catálogo"}</h1>
         <p className="text-sm text-muted-foreground">
           {results.length} {results.length === 1 ? "producto" : "productos"}
         </p>
       </div>
 
       <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-2">
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 no-scrollbar sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
           <Chip active={!category} onClick={() => setParam("categoria", "")}>Todas</Chip>
           {categories.map((c) => (
             <Chip key={c.id} active={category === c.slug} onClick={() => setParam("categoria", c.slug)}>
@@ -86,7 +86,7 @@ export function CatalogView({ products, categories }: { products: Product[]; cat
           <div className="rounded-brand border border-dashed border-border p-12 text-center">
             <p className="text-4xl">🔍</p>
             <p className="mt-3 font-semibold">No encontramos productos</p>
-            <p className="mt-1 text-sm text-muted-foreground">Probá con otras palabras o quitá los filtros.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Prueba con otras palabras o quita los filtros.</p>
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
   return (
     <button
       onClick={onClick}
-      className={`rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+      className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-colors ${
         active ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface hover:bg-muted"
       }`}
     >

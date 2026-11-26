@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type NavLink = { href: string; label: string };
+type NavLink = { href: string; label: string; highlighted?: boolean };
 
 function List({ links, active }: { links: NavLink[]; active?: string | null }) {
   return (
-    <ul className="-mx-4 flex gap-1 overflow-x-auto px-4 py-2 [scrollbar-width:none] sm:mx-0 sm:px-0">
+    <ul className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 py-1.5 sm:mx-0 sm:px-0 sm:py-2">
       {links.map((l) => {
         const isActive = active === l.href;
         return (
@@ -16,7 +16,13 @@ function List({ links, active }: { links: NavLink[]; active?: string | null }) {
               href={l.href}
               aria-current={isActive ? "page" : undefined}
               className={`block rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-                isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                l.highlighted
+                  ? isActive
+                    ? "bg-highlight text-highlight-foreground"
+                    : "bg-highlight/10 text-highlight hover:bg-highlight hover:text-highlight-foreground"
+                  : isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               {l.label}

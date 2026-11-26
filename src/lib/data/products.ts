@@ -1,4 +1,5 @@
 import type { Product, ProductImage } from "@/lib/types";
+import { christmasProducts } from "./products-christmas";
 
 /** Helper para armar rutas de imágenes mock: /products/<slug>/<file>.svg */
 const img = (slug: string, file: string, alt: string): ProductImage => ({
@@ -13,7 +14,7 @@ const img = (slug: string, file: string, alt: string): ProductImage => ({
  *  - Si una variante no define `price`, usa `product.price`.
  *  - Si una variante no define `images` (o está vacío), usa `product.images`.
  */
-export const products: Product[] = [
+const generalProducts: Product[] = [
   {
     id: "p-maceta-geo",
     slug: "maceta-geometrica",
@@ -151,7 +152,7 @@ export const products: Product[] = [
     name: "Organizador de Escritorio Modular",
     shortDescription: "Módulos encastrables para lápices, clips y celular.",
     description:
-      "Sistema modular de organización: combiná módulos para lápices, bandeja de clips y soporte de celular. Se encastran entre sí para armar la configuración que necesites.",
+      "Sistema modular de organización: combina módulos para lápices, bandeja de clips y soporte de celular. Se encastran entre sí para armar la configuración que necesites.",
     categorySlugs: ["organizadores"],
     price: 12900,
     images: [img("organizador-escritorio", "base-1", "Organizador de escritorio modular")],
@@ -250,3 +251,5 @@ export const products: Product[] = [
     createdAt: "2026-04-11",
   },
 ];
+
+export const products: Product[] = [...generalProducts, ...christmasProducts];

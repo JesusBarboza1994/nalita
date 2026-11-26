@@ -1,14 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
-import { CashIcon, CartIcon, WhatsAppIcon } from "@/components/icons";
+import { ColorPicker, ViewTabs } from "@/components/color-picker";
+import { CartIcon } from "@/components/icons";
+import { LabelEditor, describeLabel } from "@/components/label-editor";
+import { LazyModelViewer } from "@/components/model-viewer/lazy";
 import { Price } from "@/components/price";
 import { ProductImage } from "@/components/product-image";
 import { cart } from "@/lib/cart-store";
+import { colorsSummary, defaultColors, describeColors, editableParts } from "@/lib/model3d";
 import { getDefaultVariant, resolveVariants } from "@/lib/product-utils";
-import { buildProductInquiryMessage, whatsappLink } from "@/lib/whatsapp";
-import type { Category, Product, ProductImage as ProductImageType, ResolvedVariant } from "@/lib/types";
+import type { Category, LabelValue, PartColors, Product, ProductImage as ProductImageType, ResolvedVariant } from "@/lib/types";
+import { formatPrice } from "@/lib/format";
+import { AddedToCartLink, CashOnDeliveryNote, MobileBuyBar, ProductHeader, QuantityStepper, WhatsAppInquiry } from "./purchase-parts";
 
 export function ProductDetail({ product, categories }: { product: Product; categories: Category[] }) {
   const variants = useMemo<ResolvedVariant[]>(
@@ -24,9 +28,26 @@ export function ProductDetail({ product, categories }: { product: Product; categ
   );
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [view, setView] = useState<"fotos" | "3d">("fotos");
+  const [chosenColors, setChosenColors] = useState<PartColors>({});
 
   const variant =
     variants.find((v) => Object.entries(selected).every(([k, val]) => v.options[k] === val)) ?? variants[0];
+
+  // Modelo 3D de la variante o del producto; colores = originales + los elegidos
+  const model = variant.model3d ?? product.model3d;
+  const colors = { ...defaultColors(model), ...chosenColors };
+  // Etiqueta con texto (ej. bandeja con etiqueta), si el modelo admite montarla
+  const [label, setLabel] = useState<LabelValue | null>(null);
+  const labelOption = model?.labelMount ? product.labelOption : undefined;
+  const activeLabel = labelOption ? label : null;
+  const labelMissing = !!activeLabel && !activeLabel.text.trim();
+  const price = variant.price + (activeLabel && labelOption ? labelOption.price : 0);
+  const customizations = [...describeColors(model, colors), ...describeLabel(activeLabel)];
+  const pickColor = (partId: string, filamentId: string) => {
+    setChosenColors((prev) => ({ ...prev, [partId]: filamentId }));
+    setView("3d");
+  };
 
   const selectValue = (option: string, value: string) => {
     const wanted = { ...selected, [option]: value };
@@ -47,7 +68,16 @@ export function ProductDetail({ product, categories }: { product: Product; categ
         Object.entries(selected).every(([k, val]) => k === option || v.options[k] === val),
     );
 
+  const buyLabel = !variant.available
+    ? "Sin stock"
+    : labelMissing
+      ? "Escribe el texto de la etiqueta"
+      : added
+        ? "¡Agregado! ✓"
+        : "Agregar al carrito";
+
   const addToCart = () => {
+    if (labelMissing) return;
     cart.add(
       {
         productId: product.id,
@@ -55,8 +85,9 @@ export function ProductDetail({ product, categories }: { product: Product; categ
         variantId: variant.id,
         name: product.name,
         variantName: variant.name,
-        price: variant.price,
+        price,
         image: variant.images[0],
+        customizations: customizations.length ? customizations : undefined,
       },
       quantity,
     );
@@ -66,24 +97,23 @@ export function ProductDetail({ product, categories }: { product: Product; categ
 
   return (
     <div className="grid gap-8 md:grid-cols-2 lg:gap-14">
-      <Gallery key={variant.id} images={variant.images} />
+      <div>
+        {model && <ViewTabs view={view} onChange={setView} />}
+        {model && view === "3d" ? (
+          <LazyModelViewer
+            className="aspect-square"
+            spec={{ pieces: [{ key: "pieza", model, colors, label: activeLabel ?? undefined }] }}
+            note={model.approximate ? "Vista referencial" : undefined}
+          />
+        ) : (
+          <Gallery key={variant.id} images={variant.images} />
+        )}
+      </div>
 
       <div className="flex flex-col gap-5">
-        <div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <Link key={c.id} href={`/categoria/${c.slug}`} className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground hover:text-foreground">
-                {c.name}
-              </Link>
-            ))}
-            {product.isNew && <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-accent-foreground">Nuevo</span>}
-            {product.customizable && <span className="rounded-full bg-secondary/15 px-2.5 py-0.5 text-xs font-semibold text-secondary">Personalizable</span>}
-          </div>
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight">{product.name}</h1>
-          <p className="mt-2 text-muted-foreground">{product.shortDescription}</p>
-        </div>
+        <ProductHeader product={product} categories={categories} />
 
-        <Price price={variant.price} compareAtPrice={variant.compareAtPrice} size="lg" />
+        <Price price={price} compareAtPrice={variant.compareAtPrice} size="lg" />
 
         {product.options.map((option) => (
           <div key={option.name}>
@@ -112,54 +142,55 @@ export function ProductDetail({ product, categories }: { product: Product; categ
           </div>
         ))}
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center rounded-full border border-border bg-surface">
-            <button type="button" className="h-11 w-11 text-lg" onClick={() => setQuantity((q) => Math.max(1, q - 1))} aria-label="Restar">−</button>
-            <span className="w-8 text-center font-semibold" aria-live="polite">{quantity}</span>
-            <button type="button" className="h-11 w-11 text-lg" onClick={() => setQuantity((q) => q + 1)} aria-label="Sumar">+</button>
+        {labelOption && (
+          <LabelEditor
+            option={labelOption}
+            value={activeLabel}
+            onChange={(v) => {
+              setLabel(v);
+              setView("3d");
+            }}
+          />
+        )}
+
+        {model && editableParts(model).length > 0 && (
+          <div className="rounded-brand border border-border bg-surface p-4">
+            <p className="mb-3 text-sm font-semibold">🎨 Personaliza los colores</p>
+            <ColorPicker model={model} colors={colors} onChange={pickColor} onReset={() => setChosenColors({})} />
           </div>
-          <button type="button" onClick={addToCart} disabled={!variant.available} className="btn-primary h-11 flex-1 px-6">
+        )}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <QuantityStepper value={quantity} onChange={setQuantity} />
+          <button type="button" onClick={addToCart} disabled={!variant.available || labelMissing} className="btn-primary hidden h-11 flex-1 px-6 md:inline-flex">
             <CartIcon width={18} height={18} />
-            {!variant.available ? "Sin stock" : added ? "¡Agregado! ✓" : "Agregar al carrito"}
+            {buyLabel}
           </button>
         </div>
 
-        {added && (
-          <Link href="/carrito" className="-mt-2 text-sm font-semibold text-primary hover:underline">
-            Ver carrito y finalizar compra →
-          </Link>
-        )}
+        <AddedToCartLink show={added} />
 
-        <a
-          href={whatsappLink(buildProductInquiryMessage(product.name, variant.name))}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-outline h-11"
-          onClick={(e) => {
-            e.currentTarget.href = whatsappLink(buildProductInquiryMessage(product.name, variant.name, window.location.href));
-          }}
-        >
-          <WhatsAppIcon width={18} height={18} className="text-whatsapp" /> Consultar por WhatsApp
-        </a>
+        <WhatsAppInquiry
+          productName={product.name}
+          detail={[variant.name, colorsSummary(model, colors)].filter(Boolean).join(" · ") || undefined}
+        />
 
-        <div className="flex items-start gap-3 rounded-brand bg-muted p-4 text-sm">
-          <CashIcon className="mt-0.5 shrink-0 text-primary" />
-          <p>
-            <span className="font-semibold">Pagás al recibir.</span>{" "}
-            <span className="text-muted-foreground">
-              Confirmamos tu pedido por WhatsApp y abonás contra entrega.
-              {product.customizable && " La personalización la coordinamos por chat."}
-            </span>
-          </p>
-        </div>
+        <CashOnDeliveryNote extra={product.customizable ? "La personalización la coordinamos por chat." : undefined} />
 
         {variant.sku && <p className="text-xs text-muted-foreground">SKU: {variant.sku}</p>}
       </div>
+
+      <MobileBuyBar
+        price={formatPrice(price * quantity)}
+        label={buyLabel}
+        disabled={!variant.available || labelMissing}
+        onClick={addToCart}
+      />
     </div>
   );
 }
 
-function Gallery({ images }: { images: ProductImageType[] }) {
+export function Gallery({ images }: { images: ProductImageType[] }) {
   const [index, setIndex] = useState(0);
   const current = images[index] ?? images[0];
 

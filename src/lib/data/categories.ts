@@ -50,4 +50,14 @@ export const categories: Category[] = [
     icon: "💡",
     order: 6,
   },
+  {
+    id: "cat-navidad",
+    slug: "navidad",
+    name: "Navidad",
+    description: "Muñecos tejidos navideños, bandejas y packs para armar tu propia escena.",
+    icon: "🎄",
+    order: 7,
+    // Se ve todo el año, pero se resalta de octubre a diciembre
+    season: { fromMonth: 10, toMonth: 12, label: "Temporada navideña" },
+  },
 ];

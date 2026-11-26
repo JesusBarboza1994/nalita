@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductGrid } from "@/components/product-card";
-import { getCategories, getProductBySlug, getProducts, getRelatedProducts } from "@/lib/catalog";
+import { getBundle, getBundlesContaining, getCategories, getProductBySlug, getProducts, getRelatedProducts } from "@/lib/catalog";
+import { getPriceRange } from "@/lib/product-utils";
+import { formatPrice } from "@/lib/format";
+import { BundleDetail } from "./bundle-detail";
 import { ProductDetail } from "./product-detail";
 
 export async function generateStaticParams() {
@@ -26,7 +29,12 @@ export default async function ProductPage({ params }: PageProps<"/producto/[slug
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const [categories, related] = await Promise.all([getCategories(), getRelatedProducts(product)]);
+  const [categories, related, bundle, packs] = await Promise.all([
+    getCategories(),
+    getRelatedProducts(product),
+    getBundle(product),
+    getBundlesContaining(product.slug),
+  ]);
   const productCategories = categories.filter((c) => product.categorySlugs.includes(c.slug));
   const mainCategory = productCategories[0];
 
@@ -43,8 +51,26 @@ export default async function ProductPage({ params }: PageProps<"/producto/[slug
       </nav>
 
       <div className="mt-6">
-        <ProductDetail product={product} categories={productCategories} />
+        {bundle ? (
+          <BundleDetail product={product} categories={productCategories} bundle={bundle} />
+        ) : (
+          <ProductDetail product={product} categories={productCategories} />
+        )}
       </div>
+
+      {packs.length > 0 && (
+        <section className="mt-10 rounded-brand border border-primary/30 bg-primary/5 p-5">
+          <p className="font-semibold">🎁 También disponible en packs</p>
+          <p className="text-sm text-muted-foreground">Combínalo con otros productos y ahorra.</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {packs.map((p) => (
+              <Link key={p.id} href={`/producto/${p.slug}`} className="btn-outline">
+                {p.name} · desde {formatPrice(getPriceRange(p).min)}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-14 grid gap-10 md:grid-cols-3">
         <div className="md:col-span-2">

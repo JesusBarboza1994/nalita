@@ -31,7 +31,7 @@ export function CheckoutView() {
         <p className="text-5xl">🎉</p>
         <h1 className="mt-3 text-2xl font-bold">¡Pedido {placed.code} listo!</h1>
         <p className="mt-2 text-muted-foreground">
-          Para confirmarlo, enviá el mensaje que preparamos por WhatsApp. Ahí coordinamos el envío y pagás al recibir.
+          Para confirmarlo, enviá el mensaje que preparamos por WhatsApp. Ahí coordinamos el envío y pagas al recibir.
         </p>
         <a href={placed.link} target="_blank" rel="noopener noreferrer" className="btn-whatsapp mt-6 w-full py-3 text-base">
           <WhatsAppIcon /> Enviar pedido por WhatsApp
@@ -72,16 +72,16 @@ export function CheckoutView() {
   };
 
   return (
-    <div className="grid gap-8 lg:grid-cols-5">
+    <div className="grid gap-6 lg:grid-cols-5 lg:gap-8">
+      <h1 className="text-2xl font-bold sm:text-3xl lg:col-span-5">Finalizar compra</h1>
       <form onSubmit={onSubmit} className="lg:col-span-3">
-        <h1 className="text-3xl font-bold">Finalizar compra</h1>
 
-        <div className="mt-6 flex items-start gap-3 rounded-brand border border-primary/30 bg-primary/5 p-4">
+        <div className="flex items-start gap-3 rounded-brand border border-primary/30 bg-primary/5 p-4">
           <CashIcon className="mt-0.5 shrink-0 text-primary" />
           <div className="text-sm">
             <p className="font-semibold">Pago contra entrega</p>
             <p className="text-muted-foreground">
-              No pagás nada ahora. Al confirmar se abre WhatsApp con tu pedido para coordinar la entrega y abonás al recibir.
+              No pagas nada ahora. Al confirmar se abre WhatsApp con tu pedido para coordinar la entrega y abonas al recibir.
             </p>
           </div>
         </div>
@@ -113,7 +113,7 @@ export function CheckoutView() {
         <p className="mt-3 text-center text-xs text-muted-foreground">{siteConfig.shippingNote}</p>
       </form>
 
-      <aside className="h-fit rounded-brand border border-border bg-surface p-5 lg:col-span-2 lg:sticky lg:top-36">
+      <aside className="order-first h-fit rounded-brand border border-border bg-surface p-4 sm:p-5 lg:order-none lg:col-span-2 lg:sticky lg:top-36">
         <h2 className="text-lg font-bold">Tu pedido</h2>
         <ul className="mt-4 space-y-3">
           {items.map((item) => (
@@ -127,6 +127,14 @@ export function CheckoutView() {
               <div className="flex-1 text-sm">
                 <p className="font-medium leading-tight">{item.name}</p>
                 {item.variantName && <p className="text-muted-foreground">{item.variantName}</p>}
+                {!!item.customizations?.length && (
+                  <p className="text-xs text-muted-foreground">🎨 {item.customizations.map((c) => `${c.label}: ${c.value}`).join(", ")}</p>
+                )}
+                {item.bundleItems && (
+                  <p className="text-xs text-muted-foreground">
+                    {item.bundleItems.map((b) => `${b.quantity}× ${b.name}${b.details ? ` (${b.details})` : ""}`).join(", ")}
+                  </p>
+                )}
               </div>
               <p className="text-sm font-semibold">{formatPrice(item.price * item.quantity)}</p>
             </li>

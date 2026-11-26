@@ -21,11 +21,17 @@ export function getDefaultVariant(product: Product): ResolvedVariant | undefined
   return resolved.find((v) => v.available) ?? resolved[0];
 }
 
-/** Rango de precios considerando todas las variantes */
+/** Rango de precios considerando todas las variantes (o tamaños, si es un pack) */
 export function getPriceRange(product: Product) {
-  const prices = product.variants.length
-    ? resolveVariants(product).map((v) => v.price)
-    : [product.price];
+  const { bundle } = product;
+  // Pack prearmado: su precio es product.price (debe incluir recargos de piezas especiales)
+  const prices = bundle
+    ? bundle.preset
+      ? [product.price]
+      : bundle.sizes.map((s) => s.price)
+    : product.variants.length
+      ? resolveVariants(product).map((v) => v.price)
+      : [product.price];
   return { min: Math.min(...prices), max: Math.max(...prices) };
 }
 

@@ -1,6 +1,6 @@
 // Genera imágenes SVG placeholder para cada imagen referenciada en la data mock.
 // Uso: node scripts/generate-placeholders.mjs
-// Cuando tengas fotos reales, reemplazá los archivos en public/products/ (o cambiá las rutas en la data).
+// Cuando tengas fotos reales, reemplaza los archivos en public/products/ (o cambia las rutas en la data).
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 

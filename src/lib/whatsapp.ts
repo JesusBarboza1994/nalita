@@ -17,9 +17,11 @@ export function buildOrderMessage(orderCode: string, items: CartItem[], customer
     `¡Hola ${siteConfig.name}! 👋 Quiero confirmar este pedido:`,
     ``,
     `🧾 *Pedido ${orderCode}*`,
-    ...items.map(
-      (i) => `• ${i.quantity} x ${i.name}${i.variantName ? ` (${i.variantName})` : ""} — ${formatPrice(i.price * i.quantity)}`,
-    ),
+    ...items.flatMap((i) => [
+      `• ${i.quantity} x ${i.name}${i.variantName ? ` (${i.variantName})` : ""} — ${formatPrice(i.price * i.quantity)}`,
+      ...(i.customizations ?? []).map((c) => `   🎨 ${c.label}: ${c.value}`),
+      ...(i.bundleItems ?? []).map((b) => `   ↳ ${b.quantity} x ${b.name}${b.details ? ` (${b.details})` : ""}`),
+    ]),
     ``,
     `*Total productos: ${formatPrice(total)}*`,
     `💵 Pago: contra entrega`,

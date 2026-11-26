@@ -25,7 +25,7 @@ export function ProductImage({
         sizes={sizes}
         priority={priority}
         unoptimized={image.src.endsWith(".svg")}
-        className="object-cover"
+        className={image.fit === "contain" ? "object-contain p-[6%]" : "object-cover"}
       />
     </div>
   );

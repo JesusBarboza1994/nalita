@@ -20,9 +20,9 @@ export function SearchBox({ className = "" }: { className?: string }) {
       <input
         name="q"
         type="search"
-        placeholder="Buscar macetas, llaveros, dragón..."
+        placeholder="Buscar productos…"
         aria-label="Buscar productos"
-        className="input rounded-full pl-10"
+        className="input h-10 rounded-full py-2 pl-10 sm:h-auto sm:py-2.5"
       />
     </form>
   );

@@ -1,0 +1,201 @@
+[
+  {
+    "src": "reno_armado_color.3mf",
+    "out": "reno.glb",
+    "targetTriangles": 150000
+  },
+  {
+    "src": "arbol_tejido_armado.glb",
+    "out": "arbol-tejido.glb",
+    "targetTriangles": 120000,
+    "groups": {
+      "arbol": [
+        "arbol"
+      ],
+      "estrella": [
+        "estrella"
+      ]
+    }
+  },
+  {
+    "src": "muneco_nieve_armado.glb",
+    "out": "muneco-nieve.glb",
+    "targetTriangles": 150000,
+    "rotateY": -90,
+    "groups": {
+      "cuerpo": [
+        "body",
+        "head"
+      ],
+      "gorro": [
+        "hat"
+      ],
+      "bufanda": [
+        "scarf"
+      ],
+      "nariz": [
+        "nariz"
+      ],
+      "detalles": [
+        "boca",
+        "boton1",
+        "boton2",
+        "boton3",
+        "ojo_a",
+        "ojo_b"
+      ]
+    }
+  },
+  {
+    "src": "santa_armado.glb",
+    "out": "papa-noel.glb",
+    "targetTriangles": 150000,
+    "groups": {
+      "traje": [
+        "chaqueta",
+        "pantalon",
+        "gorro_rojo"
+      ],
+      "barba": [
+        "barba",
+        "union_interna"
+      ],
+      "blanco": [
+        "gorro_blanco",
+        "cinturon"
+      ],
+      "piel": [
+        "cara",
+        "mano_1",
+        "mano_2"
+      ],
+      "botas": [
+        "bota_izq",
+        "bota_der"
+      ],
+      "ojos": [
+        "ojo_1",
+        "ojo_2"
+      ]
+    }
+  },
+  {
+    "src": "angel_armado.glb",
+    "out": "angel.glb",
+    "targetTriangles": 150000,
+    "groups": {
+      "cuerpo": [
+        "cuerpo"
+      ],
+      "pelo": [
+        "pelo"
+      ],
+      "piel": [
+        "cara",
+        "manos"
+      ],
+      "aureola": [
+        "aureola"
+      ],
+      "ojos": [
+        "ojo_1",
+        "ojo_2"
+      ]
+    }
+  },
+  {
+    "src": "jengibre_armado.glb",
+    "out": "galleta.glb",
+    "targetTriangles": 150000,
+    "groups": {
+      "cuerpo": [
+        "cuerpo"
+      ],
+      "glaseado": [
+        "glaseado_cabeza",
+        "glaseado_mano_izq",
+        "glaseado_mano_der"
+      ],
+      "botones": [
+        "boton_1",
+        "boton_2"
+      ],
+      "detalles": [
+        "boca",
+        "ojo_izq",
+        "ojo_der"
+      ]
+    }
+  },
+  {
+    "src": "oso_polar_armado.glb",
+    "out": "oso-polar.glb",
+    "targetTriangles": 120000,
+    "groups": {
+      "cuerpo": [
+        "cuerpo"
+      ],
+      "gorro": [
+        "gorro"
+      ],
+      "borde_gorro": [
+        "banda_gorro"
+      ],
+      "detalles": [
+        "ojo_1",
+        "ojo_2",
+        "nariz"
+      ]
+    }
+  },
+  {
+    "src": "nacimiento.glb",
+    "out": "nacimiento.glb",
+    "targetTriangles": 60000,
+    "groups": {
+      "nacimiento": [
+        "nacimiento"
+      ]
+    }
+  },
+  {
+    "src": "arbol_japandi_armado.glb",
+    "out": "arbol-grande.glb",
+    "targetTriangles": 150000,
+    "groups": {
+      "arbol": [
+        "arbol",
+        "conector_estrella"
+      ],
+      "estrella": [
+        "estrella"
+      ],
+      "base": [
+        "base",
+        "conector_base"
+      ]
+    }
+  },
+  {
+    "src": "bandeja.3mf",
+    "out": "bandeja-mediana.glb",
+    "targetTriangles": 80000
+  },
+  {
+    "src": "bandeja.3mf",
+    "out": "bandeja-chica.glb",
+    "targetTriangles": 70000,
+    "fitMm": {
+      "x": 155,
+      "z": 97
+    }
+  },
+  {
+    "src": "bandeja.3mf",
+    "out": "bandeja-grande.glb",
+    "targetTriangles": 90000,
+    "fitMm": {
+      "x": 235
+    }
+  }
+]
