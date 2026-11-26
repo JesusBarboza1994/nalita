@@ -29,7 +29,9 @@ import { meshopt } from "@gltf-transform/functions";
 const root = join(dirname(new URL(import.meta.url).pathname), "..");
 const srcDir = join(root, "models-src");
 const outDir = join(root, "public", "models");
-const models = JSON.parse(readFileSync(join(srcDir, "models.json"), "utf8"));
+// Opcional: `node scripts/build-3d-models.mjs gato` genera solo las salidas que contienen "gato"
+const only = process.argv[2];
+const models = JSON.parse(readFileSync(join(srcDir, "models.json"), "utf8")).filter((m) => !only || m.out.includes(only));
 
 await MeshoptSimplifier.ready;
 await MeshoptEncoder.ready;

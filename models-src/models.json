@@ -197,5 +197,53 @@
     "fitMm": {
       "x": 235
     }
+  },
+  {
+    "src": "gato_flexi.glb",
+    "out": "gato-rayado.glb",
+    "targetTriangles": 100000,
+    "groups": {
+      "cuerpo": [
+        "negro"
+      ],
+      "rayas": [
+        "blanco"
+      ],
+      "rosado": [
+        "rosado"
+      ]
+    }
+  },
+  {
+    "src": "gato_flexi_2.glb",
+    "out": "gato-medias.glb",
+    "targetTriangles": 100000,
+    "groups": {
+      "cuerpo": [
+        "gris"
+      ],
+      "medias": [
+        "blanco"
+      ],
+      "rosado": [
+        "rosado"
+      ]
+    }
+  },
+  {
+    "src": "gato_flexi_3.glb",
+    "out": "gato-liso.glb",
+    "targetTriangles": 100000,
+    "groups": {
+      "cuerpo": [
+        "gris"
+      ],
+      "detalles": [
+        "blanco"
+      ],
+      "rosado": [
+        "rosado"
+      ]
+    }
   }
 ]

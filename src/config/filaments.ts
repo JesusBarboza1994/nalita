@@ -16,6 +16,7 @@ export const filaments: Filament[] = [
   { id: "beige-claro", name: "Beige claro", hex: "#F1D9C4" },
   { id: "marron-madera", name: "Marrón madera", hex: "#B5865B" },
   { id: "marron-oscuro", name: "Marrón oscuro", hex: "#6F5034" },
+  { id: "gris", name: "Gris", hex: "#5E6673" },
   { id: "rojo", name: "Rojo", hex: "#C12E1F" },
   { id: "naranja", name: "Naranja", hex: "#FF6A13" },
   { id: "dorado", name: "Dorado", hex: "#E4BD68" },

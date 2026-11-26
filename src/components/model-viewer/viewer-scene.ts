@@ -575,9 +575,21 @@ export class ViewerScene {
     // Encajar tanto en vertical como en horizontal (pantallas angostas en móvil)
     const vFov = THREE.MathUtils.degToRad(this.camera.fov);
     const hFov = 2 * Math.atan(Math.tan(vFov / 2) * this.camera.aspect);
-    const distance = (sphere.radius / Math.sin(Math.min(vFov, hFov) / 2)) * 0.82;
+    let distance = sphere.radius / Math.sin(Math.min(vFov, hFov) / 2);
     const direction = new THREE.Vector3(0.35, 0.55, 1).normalize();
     this.controls.target.copy(sphere.center);
+    // Ajustar la distancia proyectando las esquinas de la caja: funciona igual para
+    // piezas altas (figuras) y largas y planas (ej. el gato flexi)
+    const corners = [0, 1, 2, 3, 4, 5, 6, 7].map(
+      (i) => new THREE.Vector3(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z),
+    );
+    for (let i = 0; i < 3; i++) {
+      this.camera.position.copy(sphere.center).addScaledVector(direction, distance);
+      this.camera.lookAt(sphere.center);
+      this.camera.updateMatrixWorld();
+      const extent = Math.max(...corners.map((c) => { const p = c.clone().project(this.camera); return Math.max(Math.abs(p.x), Math.abs(p.y)); }));
+      distance *= extent / 0.88;
+    }
     this.camera.position.copy(sphere.center).addScaledVector(direction, distance);
     this.camera.near = distance / 100;
     this.camera.far = distance * 10;

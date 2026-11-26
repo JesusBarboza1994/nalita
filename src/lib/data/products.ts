@@ -1,4 +1,4 @@
-import type { Product, ProductImage } from "@/lib/types";
+import type { Model3D, Product, ProductImage } from "@/lib/types";
 import { christmasProducts } from "./products-christmas";
 
 /** Helper para armar rutas de imágenes mock: /products/<slug>/<file>.svg */
@@ -6,6 +6,36 @@ const img = (slug: string, file: string, alt: string): ProductImage => ({
   src: `/products/${slug}/${file}.svg`,
   alt,
 });
+
+/* ---- Gato Flexi (modelos en models-src/gato_flexi*.glb → scripts/build-3d-models.mjs) ---- */
+
+const catPhoto = (file: string, alt: string): ProductImage => ({ src: `/products/gato-flexi/${file}.webp`, alt });
+const catPink = { id: "rosado", label: "Nariz y almohadillas", defaultColor: "rosado-pastel", editable: true };
+
+const catStripedModel: Model3D = {
+  src: "/models/gato-rayado.glb",
+  parts: [
+    { id: "cuerpo", label: "Cuerpo", defaultColor: "negro", editable: true },
+    { id: "rayas", label: "Rayas y patitas", defaultColor: "blanco", editable: true },
+    catPink,
+  ],
+};
+const catSocksModel: Model3D = {
+  src: "/models/gato-medias.glb",
+  parts: [
+    { id: "cuerpo", label: "Cuerpo", defaultColor: "gris", editable: true },
+    { id: "medias", label: "Patitas y punta de la cola", defaultColor: "blanco", editable: true },
+    catPink,
+  ],
+};
+const catPlainModel: Model3D = {
+  src: "/models/gato-liso.glb",
+  parts: [
+    { id: "cuerpo", label: "Cuerpo", defaultColor: "gris", editable: true },
+    catPink,
+    { id: "detalles", label: "Detalles internos", defaultColor: "blanco" },
+  ],
+};
 
 /**
  * Data mock — reemplazar por consulta a base de datos más adelante.
@@ -120,6 +150,33 @@ const generalProducts: Product[] = [
     isNew: true,
     leadTimeDays: 2,
     createdAt: "2026-11-05",
+  },
+  {
+    id: "p-gato-flexi",
+    slug: "gato-flexi",
+    name: "Gato Flexi",
+    shortDescription: "Gatito articulado de 22 cm que se dobla y se mueve. Elige sus colores.",
+    description:
+      "Gato flexible impreso en una sola pieza (print-in-place): el cuerpo, las patitas y la cola se mueven sin armar nada. Es un fidget relajante y un adorno tierno para el escritorio. Elige el modelo y personaliza los colores en la vista 3D.",
+    categorySlugs: ["figuras"],
+    price: 42,
+    images: [catPhoto("rayado-iso", "Gato flexi rayado"), catPhoto("medias-iso", "Gato flexi gris con patitas blancas"), catPhoto("liso-iso", "Gato flexi gris liso")],
+    options: [{ name: "Modelo", values: ["Rayado", "Con patitas blancas", "Liso"] }],
+    variants: [
+      { id: "v-gf-rayado", sku: "GF-RAY", name: "Rayado", options: { Modelo: "Rayado" }, price: 45, images: [catPhoto("rayado-iso", "Gato flexi rayado"), catPhoto("rayado-top", "Gato flexi rayado visto desde arriba")], model3d: catStripedModel, keywords: ["rayas", "rayado", "atigrado", "negro"] },
+      { id: "v-gf-medias", sku: "GF-MED", name: "Con patitas blancas", options: { Modelo: "Con patitas blancas" }, images: [catPhoto("medias-iso", "Gato flexi gris con patitas blancas"), catPhoto("medias-top", "Gato flexi gris con patitas blancas visto desde arriba")], model3d: catSocksModel, keywords: ["gris", "medias", "patitas blancas"] },
+      { id: "v-gf-liso", sku: "GF-LIS", name: "Liso", options: { Modelo: "Liso" }, images: [catPhoto("liso-iso", "Gato flexi gris liso"), catPhoto("liso-top", "Gato flexi gris liso visto desde arriba")], model3d: catPlainModel, keywords: ["liso", "gris", "un color"] },
+    ],
+    keywords: ["gato", "gatito", "michi", "flexi", "flexible", "articulado", "fidget", "mascota", "juguete", "regalo"],
+    specs: [
+      { label: "Medidas", value: "22 × 8 × 3 cm" },
+      { label: "Material", value: "PLA" },
+      { label: "Impresión", value: "Una sola pieza, sin armado" },
+    ],
+    featured: true,
+    isNew: true,
+    leadTimeDays: 3,
+    createdAt: "2026-11-25",
   },
   {
     id: "p-dragon",

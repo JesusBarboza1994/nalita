@@ -114,3 +114,15 @@ genera en `print/` (carpeta ignorada por git):
 Las medidas y tolerancias están como constantes al inicio del script. El texto se genera con Liberation Sans Bold
 (`models-src/fonts`, licencia OFL, mismas medidas que Arial) y queda como Arial negrita al editarlo.
 # nalita
+
+## Despliegue en Railway
+
+`railway.json` ya define build (`pnpm build`), arranque (`pnpm start`, usa el `PORT` de Railway) y healthcheck.
+Variables a configurar en el servicio (se leen **al compilar**: si las cambias, redespliega):
+
+| Variable | Ejemplo |
+| --- | --- |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | `51977354389` |
+| `NEXT_PUBLIC_SITE_URL` | `https://tu-dominio.up.railway.app` (sin `/` final) |
+
+`models-src/` y `print/` no se usan en producción: el build solo necesita `public/models/*.glb` ya generados.
